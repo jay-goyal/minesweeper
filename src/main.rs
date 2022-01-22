@@ -60,6 +60,12 @@ fn main() {
     // Lose state
     let mut lost = true;
 
+    // Number of flags
+    let mut flags = game_grid.get_flags();
+
+    // Number of mines
+    let mines = game_grid.get_mines();
+
     loop {
         // Moving the cursor
         match window.getch() {
@@ -89,12 +95,19 @@ fn main() {
                     break;
                 }
             }
+            Some(Input::Character('f')) => {
+                game_grid.flag(x - gap_x, y - gap_y);
+                flags = game_grid.get_flags();
+            }
             _ => (),
         }
 
+        window.mvprintw(1, 0, format!("FLAGS: {}, MINES: {}", flags, mines));
         game_grid.display_grid(&window, x, y, gap_x, gap_y);
     }
     endwin();
+
+    // Print GAME OVER if player lost
     if lost {
         println!("GAME OVER")
     }

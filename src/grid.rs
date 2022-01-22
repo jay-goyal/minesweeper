@@ -5,6 +5,8 @@ use crate::Difficulty;
 pub struct Grid {
     height: i32,
     width: i32,
+    flags: i32,
+    mines: i32,
     mine_loc: Vec<(i32, i32)>,
     seen: Vec<(i32, i32)>,
     flagged: Vec<(i32, i32)>,
@@ -15,6 +17,8 @@ impl Grid {
         let mut grid = Grid {
             height,
             width,
+            flags: 0,
+            mines: 0,
             mine_loc: Vec::new(),
             seen: Vec::new(),
             flagged: Vec::new(),
@@ -31,6 +35,14 @@ impl Grid {
         return self.width;
     }
 
+    pub fn get_flags(&mut self) -> i32 {
+        return self.flags;
+    }
+
+    pub fn get_mines(&mut self) -> i32 {
+        return self.mines;
+    }
+
     pub fn add_to_seen(&mut self, x: i32, y: i32) -> bool {
         // Return false if user clicks on mine
         if self.mine_loc.contains(&(x, y)) {
@@ -42,10 +54,23 @@ impl Grid {
         return true;
     }
 
+    pub fn flag(&mut self, x: i32, y: i32) {
+        if self.flagged.contains(&(x, y)) {
+            self.flagged.retain(|&a| a != (x, y));
+            self.flags -= 1;
+        } else {
+            self.flagged.push((x, y));
+            self.flags += 1;
+        }
+    }
+
     pub fn display_grid(&mut self, window: &Window, init_x: i32, init_y: i32, gap_x: i32, gap_y: i32) {
         for x in 1..=self.width {
             for y in 1..=self.height {
-                if self.mine_loc.contains(&(x, y)) {
+                if self.flagged.contains(&(x, y)) {
+                    window.attron(COLOR_PAIR(3));
+                    window.mvaddch(y + gap_y, x + gap_x, ACS_BLOCK());
+                } else if self.mine_loc.contains(&(x, y)) {
                     // Printing using red color
                     window.attron(COLOR_PAIR(3));
                     window.mvaddch(y + gap_y, x + gap_x, ACS_CKBOARD());
@@ -89,6 +114,8 @@ impl Grid {
                 break;
             }
         }
+
+        self.mines = num_mine as i32;
     }
 
     fn get_surr_mines(&mut self, x: i32, y: i32) -> i32 {
