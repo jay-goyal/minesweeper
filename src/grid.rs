@@ -31,10 +31,15 @@ impl Grid {
         return self.width;
     }
 
-    pub fn add_to_seen(&mut self, x: i32, y: i32) {
+    pub fn add_to_seen(&mut self, x: i32, y: i32) -> bool {
+        // Return false if user clicks on mine
+        if self.mine_loc.contains(&(x, y)) {
+            return false;
+        }
         if !(self.seen.contains(&(x, y))) {
             self.seen.push((x, y));
         }
+        return true;
     }
 
     pub fn display_grid(&mut self, window: &Window, init_x: i32, init_y: i32, gap_x: i32, gap_y: i32) {

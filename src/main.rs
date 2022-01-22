@@ -1,7 +1,7 @@
 mod grid;
 
 use std::env;
-use pancurses::{COLOR_BLACK, COLOR_GREEN, COLOR_RED, COLOR_WHITE, curs_set, init_pair, initscr, Input, start_color};
+use pancurses::{COLOR_BLACK, COLOR_GREEN, COLOR_RED, COLOR_WHITE, curs_set, endwin, init_pair, initscr, Input, start_color};
 use grid::Grid;
 
 pub enum Difficulty {
@@ -50,29 +50,45 @@ fn main() {
     let mut x = game_grid.get_width() / 2 + gap_x;
     let mut y = game_grid.get_height() / 2 + gap_y;
 
+    // Lose state
+    let mut lost = true;
+
     loop {
         // Moving the cursor
         match window.getch() {
-            Some(Input::KeyRight) =>
+            Some(Input::KeyRight) => {
                 if x < game_grid.get_width() + gap_x {
                     x += 1;
                 }
-            Some(Input::KeyLeft) =>
+            }
+            Some(Input::KeyLeft) => {
                 if x > gap_x + 1 {
                     x -= 1;
                 }
-            Some(Input::KeyDown) =>
+            }
+            Some(Input::KeyDown) => {
                 if y < game_grid.get_height() + gap_y {
                     y += 1;
                 }
-            Some(Input::KeyUp) =>
+            }
+            Some(Input::KeyUp) => {
                 if y > gap_y + 1 {
                     y -= 1;
                 }
-            Some(Input::Character(' ')) => game_grid.add_to_seen(x - gap_x, y - gap_y),
+            }
+            Some(Input::Character(' ')) => {
+                let safe = game_grid.add_to_seen(x - gap_x, y - gap_y);
+                if !safe {
+                    break;
+                }
+            }
             _ => (),
         }
 
         game_grid.display_grid(&window, x, y, gap_x, gap_y);
+    }
+    endwin();
+    if lost {
+        println!("GAME OVER")
     }
 }
