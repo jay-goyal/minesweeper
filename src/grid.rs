@@ -48,15 +48,10 @@ impl Grid {
         if self.mine_loc.contains(&(x, y)) {
             return false;
         }
-        if !(self.seen.contains(&(x, y)))
-            && x >= 1
-            && x <= self.width
-            && y >= 1
-            && y <= self.height
-            && i <= 7
+        if !(self.seen.contains(&(x, y))) && x >= 1 && x <= self.width && y >= 1 && y <= self.height
         {
             self.seen.push((x, y));
-            if self.get_surr_mines(x, y) == 0 {
+            if self.get_surr_mines(x, y) == 0 && i <= 7 {
                 self.add_to_seen(x - i, y - i, i + 1);
                 self.add_to_seen(x - i, y, i + 1);
                 self.add_to_seen(x - i, y + i, i + 1);
