@@ -1,8 +1,11 @@
 mod grid;
 
-use std::env;
-use pancurses::{COLOR_BLACK, COLOR_GREEN, COLOR_RED, COLOR_WHITE, curs_set, endwin, init_pair, initscr, Input, start_color};
 use grid::Grid;
+use pancurses::{
+    curs_set, endwin, init_pair, initscr, start_color, Input, COLOR_BLACK, COLOR_GREEN, COLOR_RED,
+    COLOR_WHITE,
+};
+use std::env;
 
 pub enum Difficulty {
     Easy,
@@ -26,14 +29,14 @@ fn main() {
             "medium" => Difficulty::Medium,
             "hard" => Difficulty::Hard,
             _ => Difficulty::Medium,
-        }
+        },
         None => Difficulty::Medium,
     };
 
     // Set window background
     for x in 0..window.get_max_x() {
         for y in 0..window.get_max_y() {
-            window.mvprintw(y,x, ' ');
+            window.mvprintw(y, x, " ");
         }
     }
 
@@ -66,6 +69,7 @@ fn main() {
     // Number of mines
     let mines = game_grid.get_mines();
 
+    // GAME LOOP //
     loop {
         // Moving the cursor
         match window.getch() {
@@ -102,6 +106,11 @@ fn main() {
             _ => (),
         }
 
+        if game_grid.check_win() {
+            lost = false;
+            break;
+        }
+
         window.mvprintw(1, 0, format!("FLAGS: {}, MINES: {}", flags, mines));
         game_grid.display_grid(&window, x, y, gap_x, gap_y);
     }
@@ -109,6 +118,8 @@ fn main() {
 
     // Print GAME OVER if player lost
     if lost {
-        println!("GAME OVER")
+        println!("GAME OVER");
+    } else {
+        println!("VICTORY");
     }
 }

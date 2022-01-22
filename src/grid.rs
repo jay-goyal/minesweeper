@@ -1,6 +1,6 @@
-use pancurses::{ACS_BLOCK, ACS_CKBOARD, COLOR_PAIR, Window};
-use rand::Rng;
 use crate::Difficulty;
+use pancurses::{Window, ACS_BLOCK, ACS_CKBOARD, COLOR_PAIR};
+use rand::Rng;
 
 pub struct Grid {
     height: i32,
@@ -64,7 +64,14 @@ impl Grid {
         }
     }
 
-    pub fn display_grid(&mut self, window: &Window, init_x: i32, init_y: i32, gap_x: i32, gap_y: i32) {
+    pub fn display_grid(
+        &mut self,
+        window: &Window,
+        init_x: i32,
+        init_y: i32,
+        gap_x: i32,
+        gap_y: i32,
+    ) {
         for x in 1..=self.width {
             for y in 1..=self.height {
                 if self.flagged.contains(&(x, y)) {
@@ -95,6 +102,33 @@ impl Grid {
         }
         window.mv(init_y, init_x);
         window.refresh();
+    }
+
+    pub fn check_win(&self) -> bool {
+        if self.flagged.len() == self.mine_loc.len() {
+            let mut eq = true;
+            for i in 0..self.flagged.len() {
+                if !self.mine_loc.contains(&self.flagged[i]) {
+                    eq = false;
+                }
+            }
+            if eq {
+                return true;
+            }
+        }
+
+        let temp: Vec<(i32, i32)> = self
+            .seen
+            .iter()
+            .cloned()
+            .chain(self.mine_loc.iter().cloned())
+            .collect();
+
+        if temp.len() == (self.height * self.width) as usize {
+            return true;
+        }
+
+        return false;
     }
 
     fn gen_mines(&mut self, dif: Difficulty) {
