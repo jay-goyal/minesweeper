@@ -30,6 +30,13 @@ fn main() {
         None => Difficulty::Medium,
     };
 
+    // Set window background
+    for x in 0..window.get_max_x() {
+        for y in 0..window.get_max_y() {
+            window.mvprintw(y,x, ' ');
+        }
+    }
+
     // Setting Colors
     start_color();
     init_pair(1, COLOR_WHITE, COLOR_BLACK);
