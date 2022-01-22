@@ -43,13 +43,29 @@ impl Grid {
         return self.mines;
     }
 
-    pub fn add_to_seen(&mut self, x: i32, y: i32) -> bool {
+    pub fn add_to_seen(&mut self, x: i32, y: i32, i: i32) -> bool {
         // Return false if user clicks on mine
         if self.mine_loc.contains(&(x, y)) {
             return false;
         }
-        if !(self.seen.contains(&(x, y))) {
+        if !(self.seen.contains(&(x, y)))
+            && x >= 1
+            && x <= self.width
+            && y >= 1
+            && y <= self.height
+            && i <= 7
+        {
             self.seen.push((x, y));
+            if self.get_surr_mines(x, y) == 0 {
+                self.add_to_seen(x - i, y - i, i + 1);
+                self.add_to_seen(x - i, y, i + 1);
+                self.add_to_seen(x - i, y + i, i + 1);
+                self.add_to_seen(x, y - i, i + 1);
+                self.add_to_seen(x, y + i, i + 1);
+                self.add_to_seen(x + i, y - i, i + 1);
+                self.add_to_seen(x + i, y, i + 1);
+                self.add_to_seen(x + i, y + i, i + 1);
+            }
         }
         return true;
     }
@@ -75,10 +91,6 @@ impl Grid {
         for x in 1..=self.width {
             for y in 1..=self.height {
                 if self.flagged.contains(&(x, y)) {
-                    window.attron(COLOR_PAIR(3));
-                    window.mvaddch(y + gap_y, x + gap_x, ACS_BLOCK());
-                } else if self.mine_loc.contains(&(x, y)) {
-                    // Printing using red color
                     window.attron(COLOR_PAIR(3));
                     window.mvaddch(y + gap_y, x + gap_x, ACS_CKBOARD());
                 } else if self.seen.contains(&(x, y)) {

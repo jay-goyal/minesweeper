@@ -94,7 +94,7 @@ fn main() {
                 }
             }
             Some(Input::Character(' ')) => {
-                let safe = game_grid.add_to_seen(x - gap_x, y - gap_y);
+                let safe = game_grid.add_to_seen(x - gap_x, y - gap_y, 1);
                 if !safe {
                     break;
                 }
