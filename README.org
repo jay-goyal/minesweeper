@@ -1,0 +1,17 @@
+#+TITLE: Minesweeper
+#+AUTHOR: Jay Goyal
+
+A basic minesweeper written in Rust.
+
+** Code Warning
+   This code should not be considered ideal as this is my first attempt at a lot of libraries and Rust in general.
+
+* Running the game
+  You need rust to run this game. Install the rust toolchain using rutstup and run the command
+
+  #+begin_src shell
+cargo run --release [DIFFICULTY-LEVEL]
+#The difficulty level must be one of easy, medium, hard in any case
+  #+end_src
+
+  Giving a player name is mandatory as of now. It will be fixed given time.
