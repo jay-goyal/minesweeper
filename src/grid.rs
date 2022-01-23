@@ -52,14 +52,14 @@ impl Grid {
         {
             self.seen.push((x, y));
             if self.get_surr_mines(x, y) == 0 && i <= 7 {
-                self.add_to_seen(x - i, y - i, i + 1);
-                self.add_to_seen(x - i, y, i + 1);
-                self.add_to_seen(x - i, y + i, i + 1);
-                self.add_to_seen(x, y - i, i + 1);
-                self.add_to_seen(x, y + i, i + 1);
-                self.add_to_seen(x + i, y - i, i + 1);
-                self.add_to_seen(x + i, y, i + 1);
-                self.add_to_seen(x + i, y + i, i + 1);
+                self.add_to_seen(x - 1, y - 1, i + 1);
+                self.add_to_seen(x - 1, y, i + 1);
+                self.add_to_seen(x - 1, y + 1, i + 1);
+                self.add_to_seen(x, y - 1, i + 1);
+                self.add_to_seen(x, y + 1, i + 1);
+                self.add_to_seen(x + 1, y - 1, i + 1);
+                self.add_to_seen(x + 1, y, i + 1);
+                self.add_to_seen(x + 1, y + 1, i + 1);
             }
         }
         return true;
