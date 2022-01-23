@@ -103,6 +103,7 @@ fn main() {
                 game_grid.flag(x - gap_x, y - gap_y);
                 flags = game_grid.get_flags();
             }
+            Some(Input::Character('q')) => break,
             _ => (),
         }
 
@@ -111,7 +112,7 @@ fn main() {
             break;
         }
 
-        window.mvprintw(1, 0, format!("FLAGS: {}, MINES: {}", flags, mines));
+        window.mvprintw(1, 0, format!("FLAGS: {flags}, MINES: {mines}"));
         game_grid.display_grid(&window, x, y, gap_x, gap_y);
     }
     endwin();

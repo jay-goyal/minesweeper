@@ -96,7 +96,7 @@ impl Grid {
 
                     // Printing Number of mines if it is more than 0
                     if num_mines > 0 {
-                        window.mvprintw(y + gap_y, x + gap_x, format!("{}", num_mines));
+                        window.mvprintw(y + gap_y, x + gap_x, format!("{num_mines}"));
                     } else {
                         window.mvaddch(y + gap_y, x + gap_x, ACS_BLOCK());
                     }
@@ -161,29 +161,12 @@ impl Grid {
 
     fn get_surr_mines(&mut self, x: i32, y: i32) -> i32 {
         let mut count = 0;
-        if self.mine_loc.contains(&(x - 1, y)) {
-            count += 1;
-        }
-        if self.mine_loc.contains(&(x - 1, y - 1)) {
-            count += 1;
-        }
-        if self.mine_loc.contains(&(x - 1, y + 1)) {
-            count += 1;
-        }
-        if self.mine_loc.contains(&(x, y + 1)) {
-            count += 1;
-        }
-        if self.mine_loc.contains(&(x, y - 1)) {
-            count += 1;
-        }
-        if self.mine_loc.contains(&(x + 1, y)) {
-            count += 1;
-        }
-        if self.mine_loc.contains(&(x + 1, y - 1)) {
-            count += 1;
-        }
-        if self.mine_loc.contains(&(x + 1, y + 1)) {
-            count += 1;
+        for del_x in -1..2 {
+            for del_y in -1..2 {
+                if self.mine_loc.contains(&(x + del_x, y + del_y)) {
+                    count += 1
+                }
+            }
         }
         return count;
     }
